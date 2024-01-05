@@ -1,0 +1,57 @@
+captive_portal:
+ 
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+ 
+binary_sensor:
+  - platform: status
+    name: "Connect"
+ 
+remote_receiver:
+  id: ir_receiver 
+  pin:
+    number: GPIO14
+    inverted: True
+    mode:
+      input: true
+      pullup: true
+  tolerance: 55%
+  dump: all
+ 
+remote_transmitter:
+  id: ir_transmit
+  pin: GPIO4
+  carrier_duty_percent: 50%
+ 
+climate:
+  - platform: daikin   # adjust to match your AC unit!
+    name: "Daikin"
+    id: climate_ac
+    supports_cool: False
+    transmitter_id: ir_transmit
+    receiver_id: ir_receiver
+    sensor: temp
+    visual:
+      min_temperature: 10
+      max_temperature: 30
+      temperature_step: 1
+
+sensor:
+  - platform: homeassistant
+    name: "Temp"
+    entity_id: sensor.lumi_lumi_weather_temperature_3 # adjust to match a HA tempsensor of your choosing
+    id: temp
+    internal: true
+ 
+  - platform: wifi_signal
+    name: "WiFi Signal strength"
+    update_interval: 60s
+ 
+  - platform: uptime
+    name:  "Uptime"
+ 
+switch:
+  - platform: restart
+    name: "Reboot"
